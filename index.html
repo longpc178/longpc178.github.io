@@ -3,166 +3,577 @@
 <head>
   <title></title>
   <style>
-  html, body {
-    height: 100%;
-    margin: 0;
-  }
+  .level {
+  transition: transform 600ms cubic-bezier(0.23, 1, 0.32, 1), opacity 600ms cubic-bezier(0.23, 1, 0.32, 1);
+  opacity: 0;
+  transform: translateY(-20rem) translateX(20rem);
+  pointer-events: none;
+}
+.level[l="1"] {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) translateX(0);
+}
+.level:hover .finish {
+  transform: scale(1);
+  opacity: 1;
+  pointer-events: auto;
+  transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1), opacity 200ms linear;
+}
 
-  body {
-    background: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  canvas {
-    border: 1px solid white;
-  }
+input {
+  opacity: 0;
+  pointer-events: none;
+}
+
+input:checked + .level + input + .level {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) translateX(0);
+}
+
+input:checked + .level {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(20rem) translateX(-20rem) !important;
+}
+
+.button, .goal {
+  position: absolute;
+  top: 5%;
+  left: 20%;
+  width: 75%;
+  height: 75%;
+  border-radius: 10rem;
+  background: #ebc247;
+  text-align: center;
+  line-height: 8rem;
+  box-shadow: -0.5rem 0.5rem 0.5rem #7a8ab8;
+  transition: box-shadow 200ms cubic-bezier(0.23, 1, 0.32, 1), transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+  cursor: pointer;
+}
+.button:hover, .goal:hover {
+  transform: translateX(0.5rem) translateY(-0.5rem);
+  box-shadow: -2rem 2rem 3rem #7a8ab8;
+}
+.button:active, .goal:active {
+  transform: translateX(-0.5rem) translateY(0.5rem);
+  box-shadow: 0rem 0rem 0rem #7a8ab8;
+}
+
+.button {
+  background: #c4bddb;
+}
+
+input:checked + .button {
+  pointer-events: none;
+  transform: translateX(-0.5rem) translateY(0.5rem);
+  box-shadow: 0rem 0rem 0rem #7a8ab8;
+}
+
+#level-one {
+  position: absolute;
+  z-index: 10000;
+}
+
+.step {
+  width: 10.1rem;
+  height: 10.1rem;
+  background: #c4bddb;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transform: translateY(5rem) translateX(-5rem);
+  pointer-events: none;
+  transition: transform 600ms cubic-bezier(0.755, 0.05, 0.855, 0.06), opacity 600ms linear;
+}
+.step:before, .step:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none !important;
+}
+.step:before {
+  left: -20%;
+  background: #5993a6;
+  transform-origin: 100% 100%;
+  transform: skewy(-45deg);
+  width: 20%;
+}
+.step:after {
+  top: 100%;
+  background: #7a8ab8;
+  transform-origin: 0% 0%;
+  transform: skewX(-45deg);
+  height: 20%;
+}
+.step.start:before, .step.finish:before {
+  left: -50%;
+  width: 50%;
+}
+.step.start:after, .step.finish:after {
+  height: 50%;
+}
+.step.start, .step:hover, .step:hover + .step, .step:hover + .path > .step:first-child, .step:hover + .path + .step, .step:hover + .bridge > input:checked + .step, .step:hover + .bridge > input:not(:checked) + .step + .step {
+  transform: scale(1);
+  opacity: 1;
+  pointer-events: auto;
+  transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1), opacity 200ms linear;
+}
+.step[r="1"] {
+  top: 10rem;
+}
+.step[r="2"] {
+  top: 20rem;
+}
+.step[r="3"] {
+  top: 30rem;
+}
+.step[r="4"] {
+  top: 40rem;
+}
+.step[c="1"] {
+  left: 10rem;
+}
+.step[c="2"] {
+  left: 20rem;
+}
+.step[c="3"] {
+  left: 30rem;
+}
+.step[c="4"] {
+  left: 40rem;
+}
+.step[c="0"][r="0"] {
+  z-index: 5;
+}
+.step[c="1"][r="0"] {
+  z-index: 4;
+}
+.step[c="2"][r="0"] {
+  z-index: 3;
+}
+.step[c="3"][r="0"] {
+  z-index: 2;
+}
+.step[c="4"][r="0"] {
+  z-index: 1;
+}
+.step[c="0"][r="1"] {
+  z-index: 10;
+}
+.step[c="1"][r="1"] {
+  z-index: 8;
+}
+.step[c="2"][r="1"] {
+  z-index: 6;
+}
+.step[c="3"][r="1"] {
+  z-index: 4;
+}
+.step[c="4"][r="1"] {
+  z-index: 2;
+}
+.step[c="0"][r="2"] {
+  z-index: 15;
+}
+.step[c="1"][r="2"] {
+  z-index: 12;
+}
+.step[c="2"][r="2"] {
+  z-index: 9;
+}
+.step[c="3"][r="2"] {
+  z-index: 6;
+}
+.step[c="4"][r="2"] {
+  z-index: 3;
+}
+.step[c="0"][r="3"] {
+  z-index: 20;
+}
+.step[c="1"][r="3"] {
+  z-index: 16;
+}
+.step[c="2"][r="3"] {
+  z-index: 12;
+}
+.step[c="3"][r="3"] {
+  z-index: 8;
+}
+.step[c="4"][r="3"] {
+  z-index: 4;
+}
+.step[c="0"][r="4"] {
+  z-index: 25;
+}
+.step[c="1"][r="4"] {
+  z-index: 20;
+}
+.step[c="2"][r="4"] {
+  z-index: 15;
+}
+.step[c="3"][r="4"] {
+  z-index: 10;
+}
+.step[c="4"][r="4"] {
+  z-index: 5;
+}
+
+.bridge {
+  pointer-events: none;
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50rem;
+  height: 50rem;
+  transform: perspective(100rem) translate3d(-50%, -50%, 0) rotateZ(-45deg);
+}
+
+html {
+  font-size: 1.2vh;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: #478575;
+  color: white;
+  font-size: 2rem;
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+h1 {
+  font-size: 10rem;
+  margin: 0;
+  font-family: "Teko", sans-serif;
+}
+
+p {
+  margin-top: 0;
+}
+
+.share {
+  display: inline-block;
+  margin-top: 2rem;
+  text-decoration: none;
+  padding: 2rem;
+  border-radius: 5rem;
+  background: #ebc247;
+  font-family: "Teko", sans-serif;
+  color: #366358;
+  box-shadow: -0.5rem 0.5rem 0.5rem #366358;
+  transition: box-shadow 200ms cubic-bezier(0.23, 1, 0.32, 1), transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+  cursor: pointer;
+}
+.share:hover {
+  transform: translateX(1rem) translateY(-1rem);
+  box-shadow: -1.5rem 1.5rem 2.5rem #366358;
+}
+.share:active {
+  transform: translateX(-0.5rem) translateY(0.5rem);
+  box-shadow: 0rem 0rem 0rem #366358;
+}
+
+.message {
+  transform: rotate(45deg) translatey(-10rem);
+  text-align: center;
+  width: 40rem;
+}
+
+.sig {
+  position: fixed;
+  bottom: 8px;
+  right: 8px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 100;
+  font-family: sans-serif;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 2px;
+}
   </style>
 </head>
 <body>
-<canvas width="400" height="400" id="game"></canvas>
-<script>
-var canvas = document.getElementById('game');
-var context = canvas.getContext('2d');
-
-var grid = 16;
-var count = 0;
-  
-var snake = {
-  x: 160,
-  y: 160,
-  
-  // snake velocity. moves one grid length every frame in either the x or y direction
-  dx: grid,
-  dy: 0,
-  
-  // keep track of all grids the snake body occupies
-  cells: [],
-  
-  // length of the snake. grows when eating an apple
-  maxCells: 4
-};
-var apple = {
-  x: 320,
-  y: 320
-};
-
-// get random whole numbers in a specific range
-// @see https://stackoverflow.com/a/1527820/2124254
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
-}
-
-// game loop
-function loop() {
-  requestAnimationFrame(loop);
-
-  // slow game loop to 15 fps instead of 60 (60/15 = 4)
-  if (++count < 4) {
-    return;
-  }
-
-  count = 0;
-  context.clearRect(0,0,canvas.width,canvas.height);
-
-  // move snake by it's velocity
-  snake.x += snake.dx;
-  snake.y += snake.dy;
-
-  // wrap snake position horizontally on edge of screen
-  if (snake.x < 0) {
-    snake.x = canvas.width - grid;
-  }
-  else if (snake.x >= canvas.width) {
-    snake.x = 0;
-  }
-  
-  // wrap snake position vertically on edge of screen
-  if (snake.y < 0) {
-    snake.y = canvas.height - grid;
-  }
-  else if (snake.y >= canvas.height) {
-    snake.y = 0;
-  }
-
-  // keep track of where snake has been. front of the array is always the head
-  snake.cells.unshift({x: snake.x, y: snake.y});
-
-  // remove cells as we move away from them
-  if (snake.cells.length > snake.maxCells) {
-    snake.cells.pop();
-  }
-
-  // draw apple
-  context.fillStyle = 'red';
-  context.fillRect(apple.x, apple.y, grid-1, grid-1);
-
-  // draw snake one cell at a time
-  context.fillStyle = 'green';
-  snake.cells.forEach(function(cell, index) {
-    
-    // drawing 1 px smaller than the grid creates a grid effect in the snake body so you can see how long it is
-    context.fillRect(cell.x, cell.y, grid-1, grid-1);  
-
-    // snake ate apple
-    if (cell.x === apple.x && cell.y === apple.y) {
-      snake.maxCells++;
-
-      // canvas is 400x400 which is 25x25 grids 
-      apple.x = getRandomInt(0, 25) * grid;
-      apple.y = getRandomInt(0, 25) * grid;
-    }
-
-    // check collision with all cells after this one (modified bubble sort)
-    for (var i = index + 1; i < snake.cells.length; i++) {
-      
-      // snake occupies same space as a body part. reset game
-      if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
-        snake.x = 160;
-        snake.y = 160;
-        snake.cells = [];
-        snake.maxCells = 4;
-        snake.dx = grid;
-        snake.dy = 0;
-
-        apple.x = getRandomInt(0, 25) * grid;
-        apple.y = getRandomInt(0, 25) * grid;
-      }
-    }
-  });
-}
-
-// listen to keyboard events to move the snake
-document.addEventListener('keydown', function(e) {
-  // prevent snake from backtracking on itself by checking that it's 
-  // not already moving on the same axis (pressing left while moving
-  // left won't do anything, and pressing right while moving left
-  // shouldn't let you collide with your own body)
-  
-  // left arrow key
-  if (e.which === 37 && snake.dx === 0) {
-    snake.dx = -grid;
-    snake.dy = 0;
-  }
-  // up arrow key
-  else if (e.which === 38 && snake.dy === 0) {
-    snake.dy = -grid;
-    snake.dx = 0;
-  }
-  // right arrow key
-  else if (e.which === 39 && snake.dx === 0) {
-    snake.dx = grid;
-    snake.dy = 0;
-  }
-  // down arrow key
-  else if (e.which === 40 && snake.dy === 0) {
-    snake.dy = grid;
-    snake.dx = 0;
-  }
-});
-
-// start the game
-requestAnimationFrame(loop);
-</script>
+<div class="center">
+  <input id="level-one" type="checkbox"/>
+  <div class="level" l="1">
+    <div class="step start" r="0" c="0"></div>
+    <div class="step" r="0" c="1"></div>
+    <div class="step" r="1" c="1"></div>
+    <div class="step" r="2" c="1"></div>
+    <div class="step" r="3" c="1"></div>
+    <div class="step" r="3" c="2"></div>
+    <div class="step" r="3" c="3"></div>
+    <div class="step" r="2" c="3"></div>
+    <div class="step" r="2" c="4"></div>
+    <div class="step" r="3" c="4"></div>
+    <div class="step finish" r="4" c="4">
+      <label class="goal" for="level-one"></label>
+    </div>
+  </div>
+  <input id="level-two" type="checkbox"/>
+  <div class="level">
+    <div class="step start" r="4" c="4"></div>
+    <div class="step" r="4" c="3"></div>
+    <div class="step" r="4" c="2"></div>
+    <div class="step" r="3" c="2"></div>
+    <div class="step" r="3" c="1"></div>
+    <div class="step" r="3" c="0"></div>
+    <div class="step" r="4" c="0"></div>
+    <div class="step" r="4" c="1"></div>
+    <div class="step" r="3" c="1"></div>
+    <div class="step" r="3" c="2"></div>
+    <div class="step" r="3" c="3"></div>
+    <div class="step" r="4" c="3"></div>
+    <div class="step" r="4" c="2"></div>
+    <div class="step" r="3" c="2"></div>
+    <div class="step" r="3" c="1"></div>
+    <div class="step" r="4" c="1"></div>
+    <div class="step" r="4" c="0"></div>
+    <div class="step" r="3" c="0"></div>
+    <div class="step" r="2" c="0"></div>
+    <div class="step" r="1" c="0"></div>
+    <div class="step finish" r="1" c="1">
+      <label class="goal" for="level-two"></label>
+    </div>
+  </div>
+  <input id="level-three" type="checkbox"/>
+  <div class="level">
+    <div class="step start" r="1" c="1"></div>
+    <div class="step" r="1" c="2"></div>
+    <div class="step" r="1" c="3"></div>
+    <div class="path">
+      <div class="step" r="1" c="4"></div>
+      <div class="step" r="0" c="4"></div>
+      <div class="step" r="0" c="3"></div>
+      <div class="step" r="1" c="3"></div>
+      <div class="step" r="2" c="3"></div>
+      <div class="step" r="3" c="3"></div>
+      <div class="step" r="4" c="3"></div>
+      <div class="step" r="4" c="4"></div>
+    </div>
+    <div class="step" r="2" c="3"></div>
+    <div class="step" r="3" c="3"></div>
+    <div class="step" r="3" c="2"></div>
+    <div class="step" r="3" c="1"></div>
+    <div class="step" r="3" c="0"></div>
+    <div class="step" r="2" c="0"></div>
+    <div class="step" r="1" c="0"></div>
+    <div class="step finish" r="0" c="0">
+      <label class="goal" for="level-three"></label>
+    </div>
+  </div>
+  <input id="level-four" type="checkbox"/>
+  <div class="level">
+    <div class="step start" r="0" c="0"></div>
+    <div class="path">
+      <div class="step" r="0" c="1"></div>
+      <div class="step" r="0" c="2"></div>
+      <div class="path">
+        <div class="step" r="1" c="2"></div>
+        <div class="step" r="2" c="2"></div>
+        <div class="step" r="3" c="2"></div>
+        <div class="path">
+          <div class="step" r="3" c="3"></div>
+          <div class="step" r="2" c="3"></div>
+          <div class="step" r="1" c="3"></div>
+          <div class="step" r="1" c="4"></div>
+          <div class="step" r="2" c="4"></div>
+        </div>
+        <div class="step" r="3" c="1"></div>
+        <div class="step" r="3" c="0"></div>
+        <div class="step" r="2" c="0"></div>
+        <div class="step" r="2" c="1"></div>
+        <div class="step" r="2" c="2"></div>
+        <div class="step" r="1" c="2"></div>
+        <div class="step" r="1" c="3"></div>
+        <div class="step" r="0" c="3"></div>
+        <div class="step" r="0" c="4"></div>
+        <div class="step" r="1" c="4"></div>
+        <div class="step" r="2" c="4"></div>
+        <div class="step" r="3" c="4"></div>
+      </div>
+      <div class="step" r="0" c="3"></div>
+      <div class="step" r="0" c="4"></div>
+      <div class="step" r="1" c="4"></div>
+      <div class="path">
+        <div class="step" r="1" c="3"></div>
+        <div class="step" r="2" c="3"></div>
+        <div class="step" r="2" c="2"></div>
+        <div class="step" r="2" c="1"></div>
+        <div class="step" r="2" c="0"></div>
+        <div class="step" r="1" c="0"> </div>
+      </div>
+      <div class="step" r="2" c="4"></div>
+      <div class="step" r="2" c="3"></div>
+      <div class="step" r="2" c="2"></div>
+      <div class="step" r="2" c="1"></div>
+      <div class="step" r="2" c="0"></div>
+      <div class="step" r="3" c="0"></div>
+      <div class="step" r="4" c="0"></div>
+      <div class="step" r="4" c="1"></div>
+      <div class="step" r="4" c="2"></div>
+      <div class="step" r="3" c="2"></div>
+    </div>
+    <div class="step" r="1" c="0"></div>
+    <div class="path">
+      <div class="step" r="1" c="1"></div>
+      <div class="step" r="1" c="2"></div>
+      <div class="step" r="1" c="3"></div>
+      <div class="step" r="2" c="3"></div>
+      <div class="step" r="2" c="2"></div>
+      <div class="step" r="1" c="2"></div>
+      <div class="step" r="1" c="3"></div>
+      <div class="step" r="2" c="3"></div>
+      <div class="step" r="2" c="2"></div>
+      <div class="step" r="1" c="2"></div>
+      <div class="step" r="1" c="3"></div>
+      <div class="step" r="2" c="3"></div>
+      <div class="step" r="2" c="2"></div>
+      <div class="step" r="1" c="2"></div>
+      <div class="step" r="1" c="3"></div>
+      <div class="step" r="2" c="3"></div>
+      <div class="step" r="2" c="2"></div>
+      <div class="step" r="1" c="2"></div>
+      <div class="step" r="1" c="3"></div>
+      <div class="step" r="2" c="3"></div>
+      <div class="step" r="2" c="2"></div>
+      <div class="step" r="1" c="2"></div>
+      <div class="step" r="1" c="3"></div>
+      <div class="step" r="2" c="3"></div>
+      <div class="step" r="2" c="2"></div>
+      <div class="step" r="1" c="2"></div>
+    </div>
+    <div class="step" r="2" c="0"></div>
+    <div class="step" r="3" c="0"></div>
+    <div class="step" r="4" c="0"></div>
+    <div class="step" r="4" c="1"></div>
+    <div class="step" r="4" c="2"></div>
+    <div class="step" r="3" c="2"></div>
+    <div class="step" r="2" c="2"></div>
+    <div class="path">
+      <div class="step" r="2" c="1"></div>
+      <div class="step" r="2" c="0"></div>
+      <div class="step" r="3" c="0"></div>
+      <div class="step" r="4" c="0"></div>
+      <div class="step" r="4" c="1"></div>
+      <div class="step" r="4" c="2"></div>
+    </div>
+    <div class="step" r="1" c="2"></div>
+    <div class="step" r="0" c="2"></div>
+    <div class="step" r="0" c="3"></div>
+    <div class="step" r="1" c="3"></div>
+    <div class="step" r="1" c="4"></div>
+    <div class="step" r="0" c="4"></div>
+    <div class="step" r="0" c="3"></div>
+    <div class="step" r="1" c="3"></div>
+    <div class="step" r="2" c="3"></div>
+    <div class="step" r="2" c="2"></div>
+    <div class="step" r="3" c="2"></div>
+    <div class="step finish" r="4" c="4">
+      <label class="goal" for="level-four"></label>
+    </div>
+  </div>
+  <input id="level-five" type="checkbox"/>
+  <div class="level">
+    <div class="step start" r="4" c="4"></div>
+    <div class="step" r="3" c="4"></div>
+    <div class="step" r="2" c="4">
+      <label class="button" for="bridge-one"></label>
+    </div>
+    <div class="bridge">
+      <input id="bridge-one" type="checkbox"/>
+      <div class="step" r="1" c="4"></div>
+      <div class="step" r="0" c="4"></div>
+      <div class="step" r="0" c="3"></div>
+      <div class="path">
+        <div class="step" r="1" c="3"></div>
+        <div class="step" r="1" c="4"></div>
+        <div class="step" r="2" c="4"></div>
+        <div class="step" r="3" c="4"></div>
+        <div class="step" r="3" c="3"></div>
+        <div class="step" r="4" c="3"></div>
+        <div class="step" r="4" c="2"></div>
+        <div class="step" r="4" c="1"></div>
+        <div class="path">
+          <div class="step" r="3" c="1"></div>
+          <div class="step" r="3" c="0"></div>
+          <div class="step" r="2" c="0"></div>
+          <div class="step" r="1" c="0"></div>
+          <div class="step" r="0" c="0"></div>
+          <div class="step" r="0" c="1"></div>
+          <div class="path">
+            <div class="step" r="0" c="2"></div>
+            <div class="bridge">
+              <input id="bridge-two" type="checkbox"/>
+              <div class="step" r="0" c="3"></div>
+              <div class="step" r="0" c="4"></div>
+              <div class="step" r="1" c="4"></div>
+              <div class="step" r="2" c="4"></div>
+              <div class="step" r="2" c="3"></div>
+            </div>
+          </div>
+          <div class="step" r="1" c="1"></div>
+          <div class="step" r="1" c="0">
+            <label class="button" for="bridge-three"></label>
+          </div>
+        </div>
+        <div class="step" r="4" c="0"></div>
+        <div class="step" r="3" c="0"></div>
+        <div class="step" r="3" c="1"></div>
+        <div class="step" r="4" c="1"></div>
+        <div class="step" r="4" c="2"></div>
+        <div class="step" r="4" c="3">
+          <label class="button" for="bridge-four"></label>
+        </div>
+      </div>
+      <div class="step" r="0" c="2"></div>
+      <div class="step" r="0" c="1"></div>
+      <div class="step" r="1" c="1"></div>
+      <div class="step" r="1" c="0"></div>
+      <div class="bridge">
+        <input id="bridge-four" type="checkbox"/>
+        <div class="step" r="2" c="0"></div>
+        <div class="step" r="3" c="0"></div>
+        <div class="path">
+          <div class="step" r="4" c="0"></div>
+          <div class="step" r="4" c="1"></div>
+          <div class="step" r="4" c="2"></div>
+        </div>
+        <div class="step" r="3" c="1"></div>
+        <div class="step" r="4" c="1"></div>
+        <div class="step" r="4" c="0"></div>
+        <div class="bridge">
+          <input id="bridge-three" type="checkbox"/>
+          <div class="step" r="3" c="0"></div>
+          <div class="step" r="2" c="0"></div>
+          <div class="step" r="1" c="0"></div>
+          <div class="step" r="0" c="0">
+            <label class="button" for="bridge-two"> </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="step finish" r="2" c="2">
+      <label class="goal" for="level-five"></label>
+    </div>
+  </div>
+  <input id="finsh" type="checkbox"/>
+  <div class="level">
+    <div class="message">
+      <h1>YOU WIN!</h1>
+      <p>Thanks for playing! I'm pretty impressed you had the patience to make it all the way!</p><a class="share" href="https://twitter.com/intent/tweet?text=I%20made%20it%20to%20the%20end%20of%20this%20pure%20CSS%20game%2C%20I%20bet%20you%20can%27t! &amp;url=http%3A%2F%2Fcodepen.io%2Fnathantaylor%2Fpen%2FKaLvXw&amp;via=nathantokyo" target="_blank">Brag on Twitter!</a>
+    </div>
+  </div>
+</div>
 </body>
 </html>
